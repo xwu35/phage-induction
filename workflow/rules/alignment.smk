@@ -62,7 +62,7 @@ rule filter_blastn_alignment:
             {params.script} -i {input.blastn} -o {output.filtered}
         else
             echo "No contigs aligned to the bacterial genome. BLASTn result is empty."
-            touch {output.filtered}
+            echo "chr\tstart\tend" > {output.filtered} # add header line for visualization app
         fi
         """
 
@@ -84,7 +84,7 @@ rule get_blastn_alignment_within_prophage_region:
             {params.script} -b {input.filtered} -p {input.bed_file} -o {output}
         else
             echo "The filtered BLASTn file is empty."
-            touch {output}
+            echo "chr\tstart\tend\tcontig\tstart_p\tend_p\tregion" >{output} # add header line for visualization app
         fi
         """
 
