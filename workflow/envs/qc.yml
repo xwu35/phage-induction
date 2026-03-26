@@ -1,0 +1,11 @@
+
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+
+dependencies:
+  - fastqc=0.12.1
+  - pip=23.1.2
+  - pip:
+    - multiqc==1.33

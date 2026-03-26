@@ -1,0 +1,80 @@
+from scripts.common import parse_samples_and_reads,parse_sample_genome_and_sequences,parse_metadata
+
+configfile: os.path.join(workflow.basedir, "..", "config", "config.yaml")
+
+# path to sample and reads info
+SAMPLE_INFO = config["sample_info"]
+
+# directory to raw reads
+READDIR = config["reads_dir"]
+
+# path to sample, genome and prophage prediction results
+# GENOME_INFO = config["genome_info"]
+
+# directory to genome sequences
+GENOMEDIR = config["genome_dir"]
+
+# directory to prophage prediction results
+PROPHAGEDIR = config["prophage_dir"]
+
+# directory to save the results
+RESULTS_DIR = config["results_dir"]
+
+# get sample names and reads path
+# SAMPLE, R1_MAP, R2_MAP = parse_samples_and_reads(SAMPLE_INFO, READDIR)
+
+# get sample names and corresponding genome and prophage coordinates, genome and its sequence
+# SAMPLE_GENOME_MAP, GENOME, GENOME_SEQUENCE_MAP = parse_sample_genome_and_sequences(GENOME_INFO, GENOMEDIR, PROPHAGEDIR)
+
+SAMPLE, R1_MAP, R2_MAP, SAMPLE_GENOME_MAP, GENOME, GENOME_SEQUENCE_MAP = parse_metadata(SAMPLE_INFO, READDIR, GENOMEDIR, PROPHAGEDIR)
+
+# tools that are not installed through env
+GENOMAD = config["tools"]["genomad_env"]
+VIRSORTER2= config["tools"]["virsorter2_env"]
+CT3=config["tools"]["cenote_taker3_env"]
+CHECKV=config["tools"]["checkv_env"]
+
+# function to define wildcards
+def expand_all(pattern):
+    return expand(pattern, sample = SAMPLE, genome=GENOME)
+
+# rules
+include: "rules/setup.smk"
+include: "rules/trimming.smk"
+include: "rules/mapping.smk"
+include: "rules/prophage_region.smk"
+include: "rules/assembly.smk"
+include: "rules/alignment.smk"
+include: "rules/identification.smk"
+include: "rules/annotation.smk"
+
+# funtion to define requested inputs for the rule all
+def get_all_input(wildcards):
+    wanted_input = []
+
+    if config["step"] == "fastqc":
+        wanted_input = fastqc_input
+    
+    if config["step"] == "trimming":
+        wanted_input = trimming_input
+
+    if config["step"] == "mapping":
+        wanted_input = mapping_input
+        
+    if config["step"] == "assemble":
+        wanted_input += assembly_input
+
+    if config["step"] == "identification":
+        wanted_input = identification_input
+
+    if config["step"] == "alignment":
+        wanted_input = alignment_input
+    
+    if config["step"] == "annotation":
+        wanted_input = annotation_input
+
+    return wanted_input
+
+# master target rule
+rule all:
+    input: get_all_input

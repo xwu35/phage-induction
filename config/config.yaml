@@ -1,0 +1,79 @@
+# resources: cpu and memory
+resources:
+    huge_mem: 256000 # Memory in megabytes (e.g 256GB = 256000)
+
+    big_mem: 128000      
+    big_cpu: 16         
+
+    med_mem: 64000      
+    med_cpu: 8         
+
+    small_mem: 16000      
+    small_cpu: 4  
+
+# tools
+tools:
+  genomad_env: 'eval "$(conda shell.bash hook)"; conda activate /ref/lhlab/software/ProphageMerger/conda_envs/0f43266a38281e18b5bd022ffc952e9e_'
+  virsorter2_env: 'eval "$(conda shell.bash hook)" && conda activate /ref/lhlab/software/ProphageMerger/conda_envs/2fcf96ee6c5be1eabc2bca9b5b81d671_'
+  cenote_taker3_env: 'eval "$(conda shell.bash hook)"; conda activate /ref/lhlab/software/miniconda3/envs/ct3_env_v3.4.4'
+  checkv_env: 'eval "$(conda shell.bash hook)"; conda activate /ref/lhlab/software/ProphageMerger/conda_envs/ed586da8ab092d768b982ce3a9fa66b9_'
+
+trimmomatic:
+  # sequence type, paired end (PE) or single (SE)
+  seqType: "PE"
+  # phred type
+  phred: "-phred33"
+  # parameters for trimming adapters on paired-end samples
+  adapter_params: "2:30:10:2:True"
+  # parameters for trimming prior to adapter removal on paired-end samples
+  pre_adapter_params: ""
+  # parameters for trimming after adapter removal on paired-end samples
+  post_adapter_params: "SLIDINGWINDOW:4:20 MINLEN:50"
+
+bowtie2:
+  extra_settings: "--very-sensitive"
+
+minimap2:
+  settings: "sr"
+
+spades:
+  # "" means use default kmer list
+  setting: ""
+
+quast:
+  # contig length
+  length: 1000
+
+genomad:
+  database_path: "/ref/lhlab/software/ProphageMerger/db/genomad_db"
+  # sensitivity for genomad taxonomic annotation, default is 4.2
+  # changing sensitivity required higher memory, but it does result in more annotated protein -> annotated contigs
+  sensitivity: 7.5
+  other: "--enable-score-calibration"
+
+virsorter2:
+  groups: "dsDNAphage,ssDNA"
+  # contig length cutoff
+  length: 1000
+  # score cutoff
+  score: 0.5
+  other: "--keep-original-seq"
+  # This includes 3 steps: 1) preprocess, 2) feature extraction, and 3)
+  # classify. By default ("all") all steps are executed.
+  steps: "all"
+
+cenote_taker3:
+  database: "/ref/lhlab/data/ct3_DBs"
+  settings: "-p F -db {virion,rdrp,dnarep}"
+
+checkv:
+  database_path: "/ref/lhlab/software/ProphageMerger/db/checkv-db-v1.5"
+
+blastn:
+  dbtype: nucl
+  outfmt: "'6 std qlen slen'"
+  max_target_seqs: 10000
+  evalue: 1e-3
+
+pharokka:
+  setting: "--skip_extra_annotations"

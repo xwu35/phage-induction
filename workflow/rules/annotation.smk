@@ -1,0 +1,47 @@
+rule pharokka_annotation:
+    """functional annotation on the assembled contigs"""
+    input:
+        contigs=os.path.join(dir["output"]["assembly"], "renamed_contigs", "{sample}_contigs_1kb.fasta"),
+        done=os.path.join(dir["db"], "pharokka_db", ".done")
+    output:
+        blastn=os.path.join(dir["output"]["annotation"], "pharokka", "{sample}", "{sample}.gff")
+    threads:
+        config["resources"]["med_cpu"]
+    resources:
+        mem_mb=config["resources"]["med_mem"]
+    params:
+        dir=os.path.join(dir["output"]["annotation"], "pharokka", "{sample}"),
+        database=os.path.join(dir["db"], "pharokka_db"),
+        setting=config["pharokka"]["setting"]
+    conda:
+        os.path.join(dir["env"], "pharokka.yml")
+    shell:
+        """
+        pharokka.py \
+            -i {input.contigs} \
+            -o {params.dir} \
+            -d {params.database} \
+            -t {threads} -f -p {wildcards.sample} \
+            {params.setting}
+        """
+
+rule pool_gffs:
+    """
+    remove input sequences (deletes everything from the ##FASTA line to the end of the file),
+    remove lines in the GFF file that start with ##,
+    pool them into the same folder
+    """
+    input:
+        os.path.join(dir["output"]["annotation"], "pharokka", "{sample}", "{sample}.gff")
+    output:
+        os.path.join(dir["output"]["annotation"], "pharokka", "all_gff", "{sample}.gff")
+    params:
+        dir=os.path.join(dir["output"]["annotation"], "pharokka", "{sample}"),
+        database=os.path.join(dir["db"], "pharokka_db"),
+        setting=config["pharokka"]["setting"]
+    conda:
+        os.path.join(dir["env"], "pharokka.yml")
+    shell:
+        """
+        cat {input} | sed '/^##FASTA$/,$d' | grep -v "^##" > {output}
+        """
