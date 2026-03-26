@@ -1,8 +1,8 @@
 # Intro
 
-A Snakemake workflow for analyzing phage induction data. This version needs pre-installed tools of  for the identification module. 
+A Snakemake workflow for analyzing phage induction data. 
 
-**NOTE**: geNomad, VirSorter2, Cenote-Taker3 and CheckV must be installed before running the workflow's identification step. The paths to these tools and their databases need to be updated to match your local setup by editing `phage-induction/config/config.yml`. Automatic installation will be added in the next version.
+**NOTE**: geNomad, VirSorter2, Cenote-Taker3 and CheckV must be installed before running the workflow's identification step. The paths to these tools and their databases need to be updated to match your local setup by editing `phage-induction/config/config.yml`. Automatic installation will be added if the identification is kept.
 
 ## Set up environment
 
@@ -40,7 +40,7 @@ mv slurm ~/.config/snakemake
 
 ### Export PATH
 
-Add the phage-induction path to your environment variable so you can run `phage-induction.py` without the full path.
+Add the phage-induction directory path to your environment variable so you can run `pinduction.py` without the full path.
 
 ```bash
 echo 'export PATH="/your/path/to/phage-induction:$PATH"' >> ~/.bashrc
@@ -58,9 +58,9 @@ The sample information table should look like this:
 | sample                       | R1                                              | R2                                              | genome     | seq_name      | prophage_file                            |
 |------------------------------|-------------------------------------------------|-------------------------------------------------|------------|---------------|------------------------------------------|
 | 1041.01Kp_AMP_Digest_7_23_25 | 1041.01Kp_AMP_Digest_7_23_25_R1_catted.fastq.gz | 1041.01Kp_AMP_Digest_7_23_25_R2_catted.fastq.gz | 1041.01_KP | 1041.01_KP.fa | 1041.01_KP_final_coordinates_0-based.bed |
-| 1041.01Kp_AMP_Stock_7_15_25  | 1041.01Kp_AMP_Stock_7_15_25_R1_catted.fastq.gz  | 1041.01Kp_AMP_Stock_7_15_25_R2_catted.fastq.gz  | 1041.01_KP | 1041.01_KP.fa | 1041.01_KP_final_coordinates_0-based.bed |
 | 1041.01Kp_MMC_Digest_7_23_25 | 1041.01Kp_MMC_Digest_7_23_25_R1_catted.fastq.gz | 1041.01Kp_MMC_Digest_7_23_25_R2_catted.fastq.gz | 1041.01_KP | 1041.01_KP.fa | 1041.01_KP_final_coordinates_0-based.bed |
-| 1041.01Kp_MMC_Stock_7_15_25  | 1041.01Kp_MMC_Stock_7_15_25_R1_catted.fastq.gz  | 1041.01Kp_MMC_Stock_7_15_25_R2_catted.fastq.gz  | 1041.01_KP | 1041.01_KP.fa | 1041.01_KP_final_coordinates_0-based.bed |
+| 1144.01_E_AMP_Digest_8_28_25  | 1144.01_E_AMP_Digest_8_28_25_R1_catted.fastq.gz  | 1144.01_E_AMP_Digest_8_28_25_R2_catted.fastq.gz  | 1144.01_E | 1144.01_E.fa | 1144.01_E_final_coordinates_0-based.bed |
+| 1144.01_E_AMP_Stock_8_12_25  | 1144.01_E_AMP_Stock_8_12_25_R1_catted.fastq.gz  | 1144.01_E_AMP_Stock_8_12_25_R2_catted.fastq.gz  | 1144.01_E | 1144.01_E.fa | 1144.01_E_final_coordinates_0-based.bed |
 
 ## Usage
 
@@ -97,8 +97,7 @@ pinduction.py \
     --genome_dir path/to/genome_sequence_directory \
     --prophage_dir path/to/prophage_prediction_results \
     --output_dir output_dir \
-    --step assemble \
-    --mapper bowtie2 
+    --step assemble 
 ```
 
 ### Specific steps
@@ -117,6 +116,8 @@ The workflow runs fastqc by default.
 
 ## TO-DO LIST
 
-- upload test data
 - add output description
 - add an option to run all the steps
+- remove unusing rules in mapping.
+- track .done file in spades_assembly rule as not all samples can generate contigs.
+

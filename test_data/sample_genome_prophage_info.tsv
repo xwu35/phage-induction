@@ -1,0 +1,3 @@
+sample	R1	R2	genome	seq_name	prophage_file
+1041.01Kp_AMP_Digest_7_23_25	1041.01Kp_AMP_Digest_7_23_25_R1_catted.fastq.gz	1041.01Kp_AMP_Digest_7_23_25_R2_catted.fastq.gz	1041.01_KP	1041.01_KP.fa	1041.01_KP_final_coordinates_0-based.bed
+1041.01Kp_MMC_Digest_7_23_25	1041.01Kp_MMC_Digest_7_23_25_R1_catted.fastq.gz	1041.01Kp_MMC_Digest_7_23_25_R2_catted.fastq.gz	1041.01_KP	1041.01_KP.fa	1041.01_KP_final_coordinates_0-based.bed

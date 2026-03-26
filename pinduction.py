@@ -116,7 +116,7 @@ def run_pinduction(sample_info, reads_dir, genome_dir, prophage_dir, output_dir,
     if test:
         sample_info=os.path.join(script_dir, "test_data", "sample_genome_prophage_info.tsv")
         reads_dir=os.path.join(script_dir, "test_data", "reads")
-        genome_dir=os.path.join(script_dir, "test_data", "sequences")
+        genome_dir=os.path.join(script_dir, "test_data", "genome_sequences")
         prophage_dir=os.path.join(script_dir, "test_data", "prophage_prediction")
         output_dir="test_output"
 
