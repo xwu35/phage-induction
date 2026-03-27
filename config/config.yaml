@@ -76,4 +76,4 @@ blastn:
   evalue: 1e-3
 
 pharokka:
-  setting: "--skip_extra_annotations"
+  setting: "--meta --meta_hmm --skip_extra_annotations"
