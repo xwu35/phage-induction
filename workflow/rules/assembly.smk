@@ -3,11 +3,13 @@ rule spades_assembly:
         R1=os.path.join(dir["output"]["trimmomatic"], "{sample}_R1.trimmomatic.fastq.gz"),
         R2=os.path.join(dir["output"]["trimmomatic"], "{sample}_R2.trimmomatic.fastq.gz")
     output:
-        contigs=os.path.join(dir["output"]["assembly"], "intermediate", "{sample}", "contigs.fasta"),
+        # spades doesn't output contigs.fasta file if no contigs were assembled, so cannot track the contigs.fasta files
+        done=os.path.join(dir["output"]["assembly"], "intermediate", "{sample}", ".done"),
         renamed=os.path.join(dir["output"]["assembly"], "renamed_contigs", "{sample}_contigs.fasta")
     params:
         outdir=directory(os.path.join(dir["output"]["assembly"], "intermediate", "{sample}")),
-        setting=config["spades"]["setting"]
+        setting=config["spades"]["setting"],
+        contigs=os.path.join(dir["output"]["assembly"], "intermediate", "{sample}", "contigs.fasta")
     threads:
         config["resources"]["med_cpu"]
     resources:
@@ -22,10 +24,15 @@ rule spades_assembly:
             -2 {input.R2} \
             -o {params.outdir} \
             -t {threads} \
-            --tmp-dir /tmp
+            --tmp-dir /tmp &&
+        touch {output.done}
 
-        # rename contigs using the sample name
-        sed 's/>/>{wildcards.sample}_/' {output.contigs} > {output.renamed}
+        # if contigs.fasta file exists, then rename the contig header by adding the sample name; otherwise create an empty one
+        if [[ -f {params.contigs} ]]; then
+            sed 's/>/>{wildcards.sample}_/' {params.contigs} > {output.renamed}
+        else
+            touch {output.renamed}
+        fi
         """
 
 rule extract_1kb_contigs:
