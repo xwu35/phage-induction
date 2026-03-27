@@ -7,8 +7,8 @@ rule rename_raw_reads:
         R1=lambda wildcards: R1_MAP[wildcards.sample],
         R2=lambda wildcards: R2_MAP[wildcards.sample]
     output:
-        R1=os.path.join(dir["output"]["intermediate"], "renamed_raw_reads", "{sample}_R1.fastq.gz"),
-        R2=os.path.join(dir["output"]["intermediate"], "renamed_raw_reads", "{sample}_R2.fastq.gz")
+        R1=os.path.join(dir["output"]["qc"], "renamed_raw_reads", "{sample}_R1.fastq.gz"),
+        R2=os.path.join(dir["output"]["qc"], "renamed_raw_reads", "{sample}_R2.fastq.gz")
     shell:
         """
         ln -s {input.R1} {output.R1} 
@@ -18,8 +18,8 @@ rule rename_raw_reads:
 rule fastqc_raw_reads:
     """run fastqc on raw reads"""
     input:
-        R1=os.path.join(dir["output"]["intermediate"], "renamed_raw_reads", "{sample}_R1.fastq.gz"),
-        R2=os.path.join(dir["output"]["intermediate"], "renamed_raw_reads", "{sample}_R2.fastq.gz")
+        R1=os.path.join(dir["output"]["qc"], "renamed_raw_reads", "{sample}_R1.fastq.gz"),
+        R2=os.path.join(dir["output"]["qc"], "renamed_raw_reads", "{sample}_R2.fastq.gz")
     output:
         R1_zip=os.path.join(dir["output"]["fastqc"], "raw_reads", "{sample}_R1_fastqc.zip"),
         R2_zip=os.path.join(dir["output"]["fastqc"], "raw_reads", "{sample}_R2_fastqc.zip")
@@ -59,8 +59,8 @@ rule multiqc_raw_reads:
 rule get_raw_reads_status:
     """check raw reads counts"""
     input:
-        R1=expand(os.path.join(dir["output"]["intermediate"], "renamed_raw_reads", "{sample}_R1.fastq.gz"), sample=SAMPLE),
-        R2=expand(os.path.join(dir["output"]["intermediate"], "renamed_raw_reads", "{sample}_R2.fastq.gz"), sample=SAMPLE)
+        R1=expand(os.path.join(dir["output"]["qc"], "renamed_raw_reads", "{sample}_R1.fastq.gz"), sample=SAMPLE),
+        R2=expand(os.path.join(dir["output"]["qc"], "renamed_raw_reads", "{sample}_R2.fastq.gz"), sample=SAMPLE)
     output:
         R1_stats=os.path.join(dir["output"]["reads_statistics"], "raw_reads", "R1_stats.tsv"),
         R2_stats=os.path.join(dir["output"]["reads_statistics"], "raw_reads", "R2_stats.tsv")
@@ -77,8 +77,8 @@ rule get_raw_reads_status:
 rule trimmomatic:
     """remove adapters and low quality reads"""
     input:
-        R1=os.path.join(dir["output"]["intermediate"], "renamed_raw_reads", "{sample}_R1.fastq.gz"),
-        R2=os.path.join(dir["output"]["intermediate"], "renamed_raw_reads", "{sample}_R2.fastq.gz")
+        R1=os.path.join(dir["output"]["qc"], "renamed_raw_reads", "{sample}_R1.fastq.gz"),
+        R2=os.path.join(dir["output"]["qc"], "renamed_raw_reads", "{sample}_R2.fastq.gz")
     output:
         R1P=os.path.join(dir["output"]["trimmomatic"], "{sample}_R1.trimmomatic.fastq.gz"),
         R1U=os.path.join(dir["output"]["trimmomatic"], "{sample}_R1.unpaired.fastq.gz"),

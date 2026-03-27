@@ -1,7 +1,5 @@
 #!/usr/bin/env Rscript
 
-# this script is used to combine read counts from different steps and plot the composition of reads
-
 suppressPackageStartupMessages(library("tidyverse"))
 
 # define input
@@ -9,14 +7,14 @@ trimmed <- snakemake@input$trimmed
 mapped <- snakemake@input$mapped
 
 # trimmed reads
-counts_trimmed <- read.table(trimmed, 
-                                   sep = "\t", header = T) %>% 
+counts_trimmed <- read.table(trimmed, sep = "\t", header = T) %>% 
   mutate(sample = sub("_R1.*", "", basename(file)),
          trimmed_reads = num_seqs * 2) %>%
   select(sample, trimmed_reads)
 
 # mapped to the genome
 counts_mapped <- read.table(mapped, sep = " ", header = T) %>%
+  mutate(sample = sub("_mapped_sorted.bam", "", basename(sample))) %>%
   rename(mapped = "read_counts") 
  
 # merge all tables
@@ -24,11 +22,11 @@ df_lists = list(counts_trimmed, counts_mapped)
 
 combined_table <- Reduce(function(x, y) merge(x, y, by = "sample", all = TRUE), df_lists)
 
-# calculate number of removed reads at each step
+# calculate number of unmapped reads
 combined_table <- combined_table %>% 
   mutate(unmapped = trimmed_reads - mapped)
 
-# barplot of removed reads at each step
+# barplot of mapped and unmapped reads
 # define colors
 colors <- c("#009E73", "#E69F00", "#56B4E9", "#999999", "#CC79A7")
 
@@ -54,8 +52,8 @@ p_composition_reads <- combined_table %>%
 
 # select few columns to write out
 output_table <- combined_table %>%
-  mutate(pct_mapped = mapped / trimmed_reads,
-         pct_unmapped = unmapped / trimmed_reads)
+  mutate(pct_mapped = mapped / trimmed_reads * 100,
+         pct_unmapped = unmapped / trimmed_reads * 100)
   
 # save table
 write.table(output_table, snakemake@output$table,

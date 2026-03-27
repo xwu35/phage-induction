@@ -66,7 +66,7 @@ rule filter_blastn_alignment:
         fi
         """
 
-rule get_blastn_alignment_within_prophage_region:
+rule keep_blastn_alignment_within_prophage_region:
     """
     keep contigs aligned within prophage region
     """
@@ -85,45 +85,5 @@ rule get_blastn_alignment_within_prophage_region:
         else
             echo "The filtered BLASTn file is empty."
             echo "chr\tstart\tend\tcontig\tstart_p\tend_p\tregion" >{output} # add header line for visualization app
-        fi
-        """
-
-rule blastn_ani_calculation:
-    """
-    caculate ANI from blastn
-    """
-    input:
-        blastn=os.path.join(dir["output"]["alignment"], "blastn", "{genome}", "{sample}_blastn.out")
-    output:
-        ani=os.path.join(dir["output"]["alignment"], "blastn", "{genome}", "{sample}_blastn_anicalc.out")
-    params:
-        anicalc=os.path.join(dir["scripts"], "anicalc.py")
-    shell:
-        """
-        # if blastn output is not empty, then calculate ANI
-        if [[ -s {input.blastn} ]]; then
-            {params.anicalc} -i {input.blastn} -o {output.ani}
-        else
-            echo "No contigs aligned to the bacterial genome. BLASTn result is empty."
-            touch {output.ani}
-        fi
-        """
-
-rule blastn_contig_selection:
-    """
-    select the contigs aligned to the bacterial genome with ANI >= 95% and AF >=85%
-    """
-    input:
-        ani=os.path.join(dir["output"]["alignment"], "blastn", "{genome}", "{sample}_blastn_anicalc.out")
-    output:
-        selected=os.path.join(dir["output"]["alignment"], "blastn", "{genome}", "{sample}_blastn_anicalc_selected.out")
-    shell:
-        """
-        # if ani is not empty, then select contigs based on ANI and AF
-        if [[ -s {input.ani} ]]; then
-            awk '{{OFS="\t"}}{{FS="\t"}}{{ if (NR==1) {{print $1, $2, $4, $5}} else if ($4>=95 && $5>=85) {{print $1, $2, $4, $5}}}}' {input.ani} > {output.selected}
-        else
-            echo "No contigs aligned to the bacterial genome. ANI File is empty"
-            touch {output.selected}
         fi
         """

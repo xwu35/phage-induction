@@ -110,14 +110,19 @@ Specific steps can be run using the `--step` flag.
 - **assemble**: assemble the reads (includes trimming step)
 - **alignment**: align the assembled contigs to the genome (includes trimming and assemble steps)
 - **annotation**: functional annotation of the assembled contigs using pharokka (includes trimming and assemble steps)
-- **identification**: run virus detection tools on the assembled contigs (includes trimming and assemble steps)
+- **all**: run all the steps above except for the fastqc step
 
 The workflow runs fastqc by default.
 
-## TO-DO LIST
+## Output description
 
-- add output description
-- add an option to run all the steps
-- remove unusing rules in mapping.
-- track .done file in spades_assembly rule as not all samples can generate contigs.
+|             Directory          |                     Description                    |
+|--------------------------------|----------------------------------------------------|
+| `qc`                           | Includes results from fastqc and trimming          |
+| `mapping`                      | Includes results from mapping reads to the genome  |
+| `assembly`                     | Includes assembled contig sequences                | 
+| `alignment`                    | Includes BLASTn results using the assembled contigs against the genome |
+| `annotation`                   | Includes results from functional annotation on the assembled contigs |
+
+
 

@@ -66,16 +66,18 @@ def validate_test_run(ctx, param, value):
 @click.option(
     '--mapper',
     default="bowtie2",
-    type=str,
+    # type=str,
+    type=click.Choice(['bowtie2', 'minimap2'], case_sensitive=True),
     show_default=True,
     help=('Mapping software; available options are: bowtie2, minimap2')
 )
 @click.option(
     '--step',
     default='fastqc',
-    type=str,
+    # type=str,
+    type=click.Choice(['fastqc', 'trimming', 'mapping', 'assemble', 'alignment', 'annotation', 'all'], case_sensitive=True),
     show_default=True,
-    help=('Steps to run; available options are: fastqc, trimming, mapping, assemble, identification, alignment, annotation')
+    help=('Steps to run; available options are: fastqc, trimming, mapping, assemble, alignment, annotation, all')
 )
 @click.option(
     '--test',
