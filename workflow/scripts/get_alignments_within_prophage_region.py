@@ -5,7 +5,7 @@ import pandas as pd
 
 @click.command(
     context_settings=dict(help_option_names=['-h', '--help'], max_content_width=150),
-    help='Usage:\n python filter_blastn_alignment.py -b <Filtered blastn hits> -p <Prophage region coordinates> -o <Output file name>'
+    help='Usage:\n python get_alignments_within_prophage_region.py -b <Filtered blastn hits> -p <Prophage region coordinates> -o <Output file name>'
 )
 @click.option('-b',
     '--blastn',

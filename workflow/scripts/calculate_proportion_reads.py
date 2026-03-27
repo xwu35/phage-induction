@@ -6,7 +6,7 @@ import pandas as pd
 
 @click.command(
     context_settings=dict(help_option_names=['-h', '--help'], max_content_width=150),
-    help='Usage:\n python filter_blastn_alignment.py -i <Read counts by prophage region> -t <Trimmed read counts> -o <Output file name>'
+    help='Usage:\n python calculate_proportion_reads.py -i <Read counts by prophage region> -t <Trimmed read counts> -o <Output file name>'
 )
 @click.option('-i',
     '--input',
