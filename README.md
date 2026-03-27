@@ -2,8 +2,6 @@
 
 A Snakemake workflow for analyzing phage induction data. 
 
-**NOTE**: geNomad, VirSorter2, Cenote-Taker3 and CheckV must be installed before running the workflow's identification step. The paths to these tools and their databases need to be updated to match your local setup by editing `phage-induction/config/config.yml`. Automatic installation will be added if the identification is kept.
-
 ## Set up environment
 
 ### Clone the repository 
