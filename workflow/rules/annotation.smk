@@ -1,3 +1,6 @@
+localrules:
+    pool_gffs
+
 rule pharokka_annotation:
     """functional annotation on the assembled contigs"""
     input:
@@ -50,12 +53,6 @@ rule pool_gffs:
         os.path.join(dir["output"]["annotation"], "pharokka", "{sample}", "{sample}.gff")
     output:
         os.path.join(dir["output"]["annotation"], "pharokka", "all_gff", "{sample}.gff")
-    params:
-        dir=os.path.join(dir["output"]["annotation"], "pharokka", "{sample}"),
-        database=os.path.join(dir["db"], "pharokka_db"),
-        setting=config["pharokka"]["setting"]
-    conda:
-        os.path.join(dir["env"], "pharokka.yml")
     shell:
         """
         cat {input} | sed '/^##FASTA$/,$d' | grep -v "^##" > {output}
