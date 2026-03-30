@@ -12,17 +12,32 @@ rule pharokka_annotation:
     params:
         dir=os.path.join(dir["output"]["annotation"], "pharokka", "{sample}"),
         database=os.path.join(dir["db"], "pharokka_db"),
-        setting=config["pharokka"]["setting"]
+        meta_setting=config["pharokka"]["meta_setting"],
+        regular_setting=config["pharokka"]["regular_setting"]
     conda:
         os.path.join(dir["env"], "pharokka.yml")
     shell:
         """
-        pharokka.py \
-            -i {input.contigs} \
-            -o {params.dir} \
-            -d {params.database} \
-            -t {threads} -f -p {wildcards.sample} \
-            {params.setting}
+        # --meta mode doesn't work if the sample has only one contig
+        count=$( grep '>' {input.contigs} | wc -l)
+
+        # if number of contig > 1, then use --meta
+        if [ $count -gt 1 ]; then
+            pharokka.py \
+                -i {input.contigs} \
+                -o {params.dir} \
+                -d {params.database} \
+                -t {threads} -f -p {wildcards.sample} \
+                {params.meta_setting}
+        else
+            pharokka.py \
+                -i {input.contigs} \
+                -o {params.dir} \
+                -d {params.database} \
+                -t {threads} -f -p {wildcards.sample} \
+                {params.regular_setting}
+
+        fi
         """
 
 rule pool_gffs:
