@@ -62,7 +62,7 @@ rule filter_blastn_alignment:
             {params.script} -i {input.blastn} -o {output.filtered}
         else
             echo "No contigs aligned to the bacterial genome. BLASTn result is empty."
-            echo "chr\tstart\tend" > {output.filtered} # add header line for visualization app
+            echo "chr\tstart\tend\tcontig" > {output.filtered} # add header line for visualization app
         fi
         """
 
@@ -79,6 +79,7 @@ rule keep_blastn_alignment_within_prophage_region:
         script=os.path.join(dir["scripts"], "get_alignments_within_prophage_region.py")
     shell:
         """
+        # The filtered blastn file is no longer empty, because it has headers. Can remove the condition
         # if filtered blastn output is not empty, then filter
         if [[ -s {input.filtered} ]]; then
             {params.script} -b {input.filtered} -p {input.bed_file} -o {output}
