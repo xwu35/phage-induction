@@ -2,6 +2,10 @@
 
 A Snakemake workflow for analyzing phage induction data. 
 
+<p align="center">
+    <img src="images/phage_induction_workflow.png" style="width:50%; height:40%;">
+</p>
+
 ## Set up environment
 
 ### Clone the repository 
