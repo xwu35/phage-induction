@@ -42,5 +42,5 @@ blastn:
   evalue: 1e-3
 
 pharokka:
-  meta_setting: "--meta --skip_extra_annotations"
-  regular_setting: "--skip_extra_annotations"
+  meta_setting: "--meta --skip_extra_annotations --skip_mash"
+  regular_setting: "--skip_extra_annotations --skip_mash"
