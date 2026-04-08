@@ -98,7 +98,7 @@ def validate_test_run(ctx, param, value):
     default='',
     show_default=True,
     help='Directory to store conda environments.'
-    ' By default, the "conda_env" directory within `pinduction` is used'
+    ' By default, the "conda_env" directory within `phage-induction` is used'
 )
 @click.option(
     '--profile',
@@ -127,9 +127,9 @@ def run_pinduction(sample_info, reads_dir, genome_dir, prophage_dir, output_dir,
         os.makedirs(output_dir, exist_ok=True)
         logfile = os.path.join(output_dir, f"{os.path.basename(output_dir)}_run.log")
         with open(logfile, "w") as log:
-            log.write("================pInduction run log==============\n")
+            log.write("================phage-induction run log==============\n")
             log.write(f"Start time: {datetime.now()}\n")
-            log.write(f"pInduction version: {version}\n")
+            log.write(f"phage-induction version: {version}\n")
             log.write(f"Sample table: {sample_info}\n")
             log.write(f"Raw reads direcotry: {reads_dir}\n")
             log.write(f"Genome sequence direcotry: {genome_dir}\n")
