@@ -188,7 +188,7 @@ rule keep_reads_within_prophage_region:
         bedtools intersect -f 1 -wa -a {input.bam} -b {input.bed_file} > {output}
         """
 
-rule count_primarily_mapped_raeds_within_prophage_region:
+rule count_primarily_mapped_reads_within_prophage_region:
     input:
         mapped_within_prophage
     output:
